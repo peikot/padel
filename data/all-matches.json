@@ -29,6 +29,11 @@
       "id": 6,
       "name": "Tour 6",
       "date": "15.03.2026"
+    },
+    {
+      "id": 7,
+      "name": "Tour 7",
+      "date": "18.03.2026"
     }
   ],
   "matches": [
@@ -1207,6 +1212,202 @@
       ],
       "sa": 13,
       "sb": 19
+    },
+    {
+      "tourId": 7,
+      "r": 1,
+      "a": [
+        "Tero",
+        "Kauri"
+      ],
+      "b": [
+        "Jere",
+        "Jussi"
+      ],
+      "sa": 15,
+      "sb": 17
+    },
+    {
+      "tourId": 7,
+      "r": 1,
+      "a": [
+        "Aki",
+        "Vesa"
+      ],
+      "b": [
+        "Messi",
+        "Janne"
+      ],
+      "sa": 16,
+      "sb": 16
+    },
+    {
+      "tourId": 7,
+      "r": 2,
+      "a": [
+        "Tero",
+        "Jere"
+      ],
+      "b": [
+        "Aki",
+        "Janne"
+      ],
+      "sa": 11,
+      "sb": 21
+    },
+    {
+      "tourId": 7,
+      "r": 2,
+      "a": [
+        "Vesa",
+        "Messi"
+      ],
+      "b": [
+        "Jussi",
+        "Kauri"
+      ],
+      "sa": 22,
+      "sb": 10
+    },
+    {
+      "tourId": 7,
+      "r": 3,
+      "a": [
+        "Tero",
+        "Aki"
+      ],
+      "b": [
+        "Vesa",
+        "Kauri"
+      ],
+      "sa": 16,
+      "sb": 16
+    },
+    {
+      "tourId": 7,
+      "r": 3,
+      "a": [
+        "Messi",
+        "Jussi"
+      ],
+      "b": [
+        "Janne",
+        "Jere"
+      ],
+      "sa": 16,
+      "sb": 16
+    },
+    {
+      "tourId": 7,
+      "r": 4,
+      "a": [
+        "Tero",
+        "Vesa"
+      ],
+      "b": [
+        "Messi",
+        "Jere"
+      ],
+      "sa": 23,
+      "sb": 9
+    },
+    {
+      "tourId": 7,
+      "r": 4,
+      "a": [
+        "Jussi",
+        "Janne"
+      ],
+      "b": [
+        "Kauri",
+        "Aki"
+      ],
+      "sa": 19,
+      "sb": 13
+    },
+    {
+      "tourId": 7,
+      "r": 5,
+      "a": [
+        "Tero",
+        "Messi"
+      ],
+      "b": [
+        "Jussi",
+        "Aki"
+      ],
+      "sa": 24,
+      "sb": 8
+    },
+    {
+      "tourId": 7,
+      "r": 5,
+      "a": [
+        "Janne",
+        "Kauri"
+      ],
+      "b": [
+        "Jere",
+        "Vesa"
+      ],
+      "sa": 13,
+      "sb": 19
+    },
+    {
+      "tourId": 7,
+      "r": 6,
+      "a": [
+        "Tero",
+        "Jussi"
+      ],
+      "b": [
+        "Janne",
+        "Vesa"
+      ],
+      "sa": 14,
+      "sb": 18
+    },
+    {
+      "tourId": 7,
+      "r": 6,
+      "a": [
+        "Kauri",
+        "Jere"
+      ],
+      "b": [
+        "Aki",
+        "Messi"
+      ],
+      "sa": 12,
+      "sb": 20
+    },
+    {
+      "tourId": 7,
+      "r": 7,
+      "a": [
+        "Tero",
+        "Janne"
+      ],
+      "b": [
+        "Kauri",
+        "Messi"
+      ],
+      "sa": 18,
+      "sb": 14
+    },
+    {
+      "tourId": 7,
+      "r": 7,
+      "a": [
+        "Jere",
+        "Aki"
+      ],
+      "b": [
+        "Vesa",
+        "Jussi"
+      ],
+      "sa": 11,
+      "sb": 21
     }
   ]
 }
