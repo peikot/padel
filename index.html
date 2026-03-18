@@ -353,7 +353,7 @@ function myS(m,p){return pTeam(m,p)==='a'?m.sa:m.sb}
 function opS(m,p){return pTeam(m,p)==='a'?m.sb:m.sa}
 function partner(m,p){const t=pTeam(m,p)==='a'?m.a:m.b;return t.find(x=>x!==p)}
 function playerStats(p){const ms=M.filter(m=>pIn(m,p));const w=ms.filter(m=>res(m,p)==='W').length;const l=ms.filter(m=>res(m,p)==='L').length;const t=ms.filter(m=>res(m,p)==='T').length;const pts=ms.reduce((a,m)=>a+myS(m,p),0);const conc=ms.reduce((a,m)=>a+opS(m,p),0);const tours=[...new Set(ms.map(m=>m.t))].length;return{name:p,matches:ms.length,w,l,t,pts,conc,diff:pts-conc,tours,winPct:ms.length?w/ms.length:0}}
-function getTourWinner(ti){const tM=M.filter(m=>m.t===ti);const tP=[...new Set(tM.flatMap(m=>[...m.a,...m.b]))];const st=tP.map(p=>{const ms=tM.filter(m=>pIn(m,p));const pts=ms.reduce((a,m)=>a+myS(m,p),0);const conc=ms.reduce((a,m)=>a+opS(m,p),0);const w=ms.filter(m=>res(m,p)==='W').length;return{name:p,pts,diff:pts-conc,w,conc}}).sort((a,b)=>b.pts-a.pts||b.diff-a.diff||b.w-a.w||a.conc-b.conc);return st.length?st[0].name:''}
+function getTourWinner(ti){const tM=M.filter(m=>m.t===ti);const tP=[...new Set(tM.flatMap(m=>[...m.a,...m.b]))];const st=tP.map(p=>{const ms=tM.filter(m=>pIn(m,p));const pts=ms.reduce((a,m)=>a+myS(m,p),0);const conc=ms.reduce((a,m)=>a+opS(m,p),0);const w=ms.filter(m=>res(m,p)==='W').length;const l=ms.filter(m=>res(m,p)==='L').length;const t=ms.filter(m=>res(m,p)==='T').length;return{name:p,pts,diff:pts-conc,w,l,t,conc}}).sort((a,b)=>b.pts-a.pts||b.diff-a.diff||b.w-a.w||a.l-b.l||b.t-a.t||a.conc-b.conc);return st.length?st[0].name:''}
 function getTourWinsMap(){const map={};TOURS.forEach((_,ti)=>{const w=getTourWinner(ti);map[w]=(map[w]||0)+1});return map}
 
 // HERO
@@ -549,7 +549,7 @@ function openTournamentReport(ti){
     const l=ms.filter(m=>res(m,p)==='L').length;
     const t=ms.filter(m=>res(m,p)==='T').length;
     return{name:p,pts,conc,diff:pts-conc,w,l,t,matches:ms.length};
-  }).sort((a,b)=>b.pts-a.pts||b.diff-a.diff||b.w-a.w||a.conc-b.conc);
+  }).sort((a,b)=>b.pts-a.pts||b.diff-a.diff||b.w-a.w||a.l-b.l||b.t-a.t||a.conc-b.conc);
 
   // tiukin ottelu
   // suurin voitto
@@ -672,7 +672,7 @@ function openTournamentReport(ti){
 
   // renderöi HTML
   const rankMedal=i=>i===0?'🥇':i===1?'🥈':i===2?'🥉':''
-  const isTied=(a,b)=>a&&b&&a.pts===b.pts&&a.diff===b.diff&&a.w===b.w&&a.conc===b.conc;
+  const isTied=(a,b)=>a&&b&&a.pts===b.pts&&a.diff===b.diff&&a.w===b.w&&a.l===b.l&&a.t===b.t&&a.conc===b.conc;
   const standingsHtml=standings.map((s,i)=>{
     const diffStr=s.diff>0?'+'+s.diff:s.diff;
     const diffCol=s.diff>0?'var(--green-bright)':s.diff<0?'var(--red)':'var(--ink3)';
@@ -754,7 +754,7 @@ function renderKehitys(){
       const w=ms.filter(m=>res(m,p)==='W').length;
       const pts=ms.reduce((a,m)=>a+myS(m,p),0);
       const tP=[...new Set(M.filter(m=>m.t===ti).flatMap(m=>[...m.a,...m.b]))];
-      const standings=tP.map(pp=>{const tms=M.filter(m=>m.t===ti&&pIn(m,pp));const tpts=tms.reduce((a,m)=>a+myS(m,pp),0);const tconc=tms.reduce((a,m)=>a+opS(m,pp),0);const tw=tms.filter(m=>res(m,pp)==='W').length;return{name:pp,pts:tpts,diff:tpts-tconc,w:tw,conc:tconc}}).sort((a,b)=>b.pts-a.pts||b.diff-a.diff||b.w-a.w||a.conc-b.conc);
+      const standings=tP.map(pp=>{const tms=M.filter(m=>m.t===ti&&pIn(m,pp));const tpts=tms.reduce((a,m)=>a+myS(m,pp),0);const tconc=tms.reduce((a,m)=>a+opS(m,pp),0);const tw=tms.filter(m=>res(m,pp)==='W').length;const tl=tms.filter(m=>res(m,pp)==='L').length;const tt=tms.filter(m=>res(m,pp)==='T').length;return{name:pp,pts:tpts,diff:tpts-tconc,w:tw,l:tl,t:tt,conc:tconc}}).sort((a,b)=>b.pts-a.pts||b.diff-a.diff||b.w-a.w||a.l-b.l||b.t-a.t||a.conc-b.conc);
       const rank=standings.findIndex(x=>x.name===p)+1;
       return{tour:ti,w,l:ms.length-w-ms.filter(m=>res(m,p)==='T').length,matches:ms.length,pts,winPct:w/ms.length,rank,avg:pts/ms.length};
     });
