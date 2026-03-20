@@ -375,6 +375,7 @@ footer a:hover{text-decoration:underline}
 <script src="data/data.js?v=5"></script>
 <script>
 // HELPERS
+function weekday(dateStr){const[d,m,y]=dateStr.split('.').map(Number);const day=new Date(y,m-1,d).getDay();return['Su','Ma','Ti','Ke','To','Pe','La'][day]}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function pIn(m,p){return m.a.includes(p)||m.b.includes(p)}
 function pTeam(m,p){return m.a.includes(p)?'a':'b'}
@@ -399,7 +400,7 @@ function renderRecentActivity(){
     const isLatest=i===0;
     return`<div onclick="openTournamentReport(${ti})" style="flex-shrink:0;width:280px;background:var(--card);border:${isLatest?'2px solid var(--border2)':'1px solid var(--border)'};border-radius:10px;padding:22px 24px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;box-shadow:${isLatest?'0 4px 16px rgba(0,80,30,0.13)':'0 1px 4px rgba(0,0,0,0.06)'}" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,80,30,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow='${isLatest?'0 4px 16px rgba(0,80,30,0.13)':'0 1px 4px rgba(0,0,0,0.06)'}'">
       ${isLatest?`<div style="position:absolute;top:14px;right:14px;background:var(--green);color:white;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;padding:3px 8px;border-radius:4px">UUSIN</div>`:''}
-      <div style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.5px;color:${isLatest?'var(--green-bright)':'var(--ink2)'};background:${isLatest?'rgba(15,112,40,0.12)':'rgba(78,138,100,0.10)'};border:1px solid ${isLatest?'rgba(15,112,40,0.22)':'rgba(78,138,100,0.18)'};border-radius:999px;padding:6px 10px;margin-bottom:10px">${tour.date}</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.5px;color:${isLatest?'var(--green-bright)':'var(--ink2)'};background:${isLatest?'rgba(15,112,40,0.12)':'rgba(78,138,100,0.10)'};border:1px solid ${isLatest?'rgba(15,112,40,0.22)':'rgba(78,138,100,0.18)'};border-radius:999px;padding:6px 10px;margin-bottom:10px">${weekday(tour.date)} ${tour.date}</div>
       <div style="font-size:20px;font-weight:800;color:var(--white);line-height:1.1;margin-bottom:16px">${tour.name}</div>
       <div style="background:${isLatest?'rgba(15,112,40,0.07)':'var(--bg)'};border-radius:8px;padding:12px 14px;margin-bottom:0">
         <div style="font-size:11px;color:var(--ink2);margin-bottom:4px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px">Turnausvoittaja</div>
@@ -478,7 +479,7 @@ function renderH2H(p1,p2){
 
 // TOURNAMENTS
 function renderTournaments(){
-  document.getElementById('tourGrid').innerHTML=TOURS.map((tour,ti)=>{const w=getTourWinner(ti);const tM=M.filter(m=>m.t===ti);const n=[...new Set(tM.flatMap(m=>[...m.a,...m.b]))].length;return`<div class="tour-card" onclick="openTournamentReport(${ti})"><div class="tour-num">${tour.id}</div><div class="tour-name">${tour.name}</div><div class="tour-date">${tour.date} · ${n} pelaajaa</div><div class="tour-winner">🏆 <b>${w}</b></div></div>`}).join('');
+  document.getElementById('tourGrid').innerHTML=TOURS.map((tour,ti)=>{const w=getTourWinner(ti);const tM=M.filter(m=>m.t===ti);const n=[...new Set(tM.flatMap(m=>[...m.a,...m.b]))].length;return`<div class="tour-card" onclick="openTournamentReport(${ti})"><div class="tour-num">${tour.id}</div><div class="tour-name">${tour.name}</div><div class="tour-date">${weekday(tour.date)} ${tour.date} · ${n} pelaajaa</div><div class="tour-winner">🏆 <b>${w}</b></div></div>`}).join('');
 }
 function showTourDetail(ti){openTournamentReport(ti)}
 
@@ -750,7 +751,7 @@ function openTournamentReport(ti){
   rounds.forEach(r=>{const rm=tM.filter(m=>m.r===r);roundsHtml+=`<div class="sub-title">Erä ${r}</div><div class="match-list">`;rm.forEach(m=>{const s1c=m.sa>m.sb?'w':m.sa<m.sb?'l':'t';const s2c=m.sb>m.sa?'w':m.sb<m.sa?'l':'t';roundsHtml+=`<div class="match-row"><div class="match-meta">Erä ${m.r}</div><div class="match-team">${m.a.map(esc).join(' & ')}</div><div class="match-score"><span class="${s1c}">${m.sa}</span><span style="color:var(--ink3);font-size:13px"> – </span><span class="${s2c}">${m.sb}</span></div><div class="match-team right">${m.b.map(esc).join(' & ')}</div><div></div></div>`;});roundsHtml+=`</div>`;});
   document.getElementById('reportPanel').innerHTML=`
     <button class="detail-close" onclick="closeReport()">✕</button>
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px;padding-right:44px"><div><div class="detail-name">${esc(tour.name)}</div><div class="detail-sub">${tour.date} · ${tP.length} pelaajaa · ${tM.length} ottelua</div></div>${waBtn}</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px;padding-right:44px"><div><div class="detail-name">${esc(tour.name)}</div><div class="detail-sub">${tour.date}${tour.time?' · '+tour.time:''} · ${tP.length} pelaajaa · ${tM.length} ottelua</div></div>${waBtn}</div>
     <div class="sub-title">Sijoitukset</div>
     <table class="lb-table" style="margin-bottom:20px"><thead><tr><th>#</th><th>Pelaaja</th><th class="r">V</th><th class="r">T</th><th class="r">H</th><th class="r">P+</th><th class="r" title="Pistesaldo (ensisijainen tasapistetilanteen ratkaisija)">+/-</th></tr></thead><tbody>${standingsHtml}</tbody></table>
     <div class="sub-title">Ottelutilastot</div>

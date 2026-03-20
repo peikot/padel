@@ -628,6 +628,8 @@
       <input type="text" id="tour-name" placeholder="Tour 6">
       <label for="tour-date">Päivämäärä</label>
       <input type="date" id="tour-date">
+      <label for="tour-time">Kellonaika</label>
+      <input type="time" id="tour-time">
       <input type="hidden" id="player-count" value="8">
       <label style="margin-top: 18px;" id="courts-label">Kentät (valitse 2)</label>
       <div id="court-picker" class="court-pick-grid"></div>
@@ -747,6 +749,7 @@ function initCreateForm() {
   const pad = n => String(n).padStart(2, '0');
   document.getElementById('tour-date').value =
     `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  document.getElementById('tour-time').value = '19:30';
   renderPlayerSlots();
   renderCourtPicker();
   const pat = localStorage.getItem('gh_pat');
@@ -874,6 +877,7 @@ async function createTournament() {
   const statusEl = document.getElementById('create-status');
   const name = document.getElementById('tour-name').value.trim() || 'Americano';
   const date = document.getElementById('tour-date').value;
+  const time = document.getElementById('tour-time').value;
   const n = parseInt(document.getElementById('player-count').value);
   const players = [...document.querySelectorAll('#player-grid input')].map(i => i.value.trim()).filter(Boolean);
   const needed = 2;
@@ -903,7 +907,7 @@ async function createTournament() {
   try {
     const schedule = buildSchedule(players);
     const ref = db.ref('tournaments').push();
-    await ref.set({ meta: { name, date, players, courts }, schedule });
+    await ref.set({ meta: { name, date, time, players, courts }, schedule });
     location.href = '?t=' + ref.key;
   } catch (e) {
     statusEl.textContent = '✗ Virhe: ' + e.message;
@@ -938,8 +942,15 @@ function renderLive() {
   const { meta, schedule, scores } = tourData;
   document.getElementById('tour-title').textContent = meta.name;
   const dateStr = meta.date ? ' · ' + meta.date : '';
+  let timeStr = '';
+  if (meta.time) {
+    const [h, m] = meta.time.split(':').map(Number);
+    const end = new Date(0, 0, 0, h, m + 90);
+    const pad = n => String(n).padStart(2, '0');
+    timeStr = ` klo ${meta.time}–${pad(end.getHours())}:${pad(end.getMinutes())}`;
+  }
   document.getElementById('tour-meta').textContent =
-    `${meta.players.length} pelaajaa · ${schedule.length} kierrosta${dateStr}`;
+    `${meta.players.length} pelaajaa · ${schedule.length} kierrosta${dateStr}${timeStr}`;
   document.getElementById('share-url').textContent = location.href;
   renderRounds(schedule, scores || {});
   renderStandings(scores || {});
@@ -1267,7 +1278,14 @@ async function saveToGitHub() {
       displayDate = `${d}.${mo}.${y}`;
     }
 
-    const newTour = { id: newTourId, name: meta.name, date: displayDate };
+    let timeRange = '';
+    if (meta.time) {
+      const [h, m] = meta.time.split(':').map(Number);
+      const end = new Date(0, 0, 0, h, m + 90);
+      const pad = n => String(n).padStart(2, '0');
+      timeRange = `${meta.time}–${pad(end.getHours())}:${pad(end.getMinutes())}`;
+    }
+    const newTour = { id: newTourId, name: meta.name, date: displayDate, ...(timeRange && { time: timeRange }) };
     const matchesToAdd = newMatches
       .filter(m => m.sa !== null && m.sb !== null)
       .map(m => ({ tourId: newTourId, r: m.r, a: m.a, b: m.b, sa: m.sa, sb: m.sb }));
